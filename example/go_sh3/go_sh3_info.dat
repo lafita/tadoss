@@ -1,0 +1,15 @@
+=========================================================
+This go model generated with the command:
+"go_builder.py -k sh3 --gmx tmp/sh3_hadded.pdb"
+Building go model from PDB file tmp/sh3_hadded.pdb
+Target folding temperatures =  350.000  K
+Key for naming output files = sh3
+Number of NC-linked repeats = 1
+Non-go weighting ('gamma') =    0.000
+Default non-go contact distance =    5.500
+Scaling side-chain contacts by    1.000
+Scaling backbone contacts by    1.000
+Writing GROMACS files
+Will build model from single structure
+Base for output file names = go_sh3/go_sh3
+=========================================================
