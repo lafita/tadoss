@@ -1,0 +1,149 @@
+# Bash script to bundle all the steps of the method
+
+# Print introduction and description header to the method
+
+echo "
+  ______ ___     ____   ____  _____ _____
+ /_  __//   |   / __ \ / __ \/ ___// ___/
+  / /  / /| |  / / / // / / /\__ \ \__ \\
+ / /  / ___ | / /_/ // /_/ /___/ /___/ /
+/_/  /_/  |_|/_____/ \____//____//____/
+
+
+TADOSS - TAndem DOmain Swap Stability predictor
+
+TADOSS estimates the stability of tandem domain swap conformations
+using an alchemical approximation based on coarse-grained (Go-like)
+simulation models from the 3D structure of a protein domain.
+
+More information at: https://github.com/lafita/tadoss
+
+-------------------------------------------------------------------
+"
+
+# Handle the inputs and help
+usage="$(basename "$0") -f [file.pdb] [-h] [-d domain] [-g gmx] [-r reduce]
+
+where:
+    -h  show this help text
+    -f  path to PDB file of a domain structure (required)
+    -d  domain name (default: query)
+    -g  location of GROMACS binary (default: gmx)
+    -r  location of Reduce binary
+
+"
+
+domain="query"
+file=""
+gromacs="gmx"
+reduce=""
+
+while getopts ':hf:d:g:r:' option
+do
+  case "$option" in
+    h) echo "$usage"
+       exit
+       ;;
+    d) domain=$OPTARG
+       ;;
+    f) file=$OPTARG
+       ;;
+    g) gromacs=$OPTARG
+       reduce=""
+       ;;
+    r) reduce=$OPTARG
+       gromacs=""
+       ;;
+    :) printf "Missing argument for -%s\n" "$OPTARG" >&2
+       echo "$usage" >&2
+       exit 1
+       ;;
+   \?) printf "Illegal option: -%s\n" "$OPTARG" >&2
+       echo "$usage" >&2
+       exit 1
+       ;;
+  esac
+done
+shift $((OPTIND - 1))
+
+# Test to see if they gave the required options
+if [ "$file" == "" ]; then
+  echo "Missing required -f [file.pdb] option"
+  echo "$usage"
+  exit 1
+fi
+
+path=`dirname $0`
+
+# Create the log and tmp directories if not yet there
+{
+  mkdir tmp
+  mkdir log
+} &> /dev/null
+
+# Clean files from previous run if any
+{
+  rm tmp/${domain}_*
+  rm log/${domain}_*
+  rm -r go_${domain}
+  rm ${domain}-dG_cut.pdb
+  rm ${domain}-dG_cut.tsv
+  rm ${domain}-dG_join.tsv
+} &> /dev/null
+
+
+echo "Step 1 - trim the PDB file to protein only residues"
+{
+  python2.7 ${path}/trim_nonprotein.py ${file} tmp/${domain}_protein.pdb -w
+} &> log/${domain}_1-trim.log
+
+if [ ! -f tmp/${domain}_protein.pdb ]; then
+  echo "Failed: see log/${domain}_1-process.log"
+  exit 1
+fi
+
+echo "Step 2 - add hydrogens to structure"
+{
+  if [ "$reduce" == "" ]; then
+    echo "Using GROMACS in $gromacs"
+    $gromacs pdb2gmx -f tmp/${domain}_protein.pdb -o tmp/${domain}_hadded.pdb -p tmp/${domain}_remove.top -i tmp/${domain}_remove.itp -ignh <<< $'14\n3'
+    rm tmp/${domain}_remove.*
+  else
+    echo "Using Reduce in $reduce"
+    $reduce tmp/${domain}_protein.pdb > tmp/${domain}_hadded.pdb
+  fi
+
+} &> log/${domain}_2-hadd.log
+
+if [ ! -f tmp/${domain}_hadded.pdb ]; then
+  echo "Failed: see log/${domain}_2-hadd.log"
+  exit 1
+fi
+
+echo "Step 3 - build the GO model of the structure"
+{
+  python2.7 ${path}/go_builder/go_builder.py -k ${domain} --gmx tmp/${domain}_hadded.pdb
+} &> log/${domain}_3-go.log
+
+if [ ! -f go_${domain}/go_${domain}_gomodel_golist.dat ]; then
+  echo "Failed: see log/${domain}_3-go.log"
+  exit 1
+fi
+
+echo "Step 4 - calculate the alchemical ddG of the domain"
+{
+  python2.7 ${path}/tadoss.py ${domain} tmp/${domain}_hadded.pdb -w
+} &> log/${domain}_4-ddG.log
+
+if [ ! -f ${domain}-dG_join.tsv ]; then
+  echo "Failed: see log/${domain}_4-ddG.log"
+  exit 1
+fi
+
+echo "SUCCESS!"
+echo ""
+
+# Print the total alchemical ddG of the domain to the user
+value=$(tail -n 1 sh3-ddG_tot.tsv | awk '{print $5}')
+echo "Total alchemical ddG of ${domain} is ${value} kcal/mol"
+echo ""
