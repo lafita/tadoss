@@ -144,6 +144,6 @@ echo "SUCCESS!"
 echo ""
 
 # Print the total alchemical ddG of the domain to the user
-value=$(tail -n 1 sh3-ddG_tot.tsv | awk '{print $5}')
+value=$(tail -n 1 ${domain}-ddG_tot.tsv | awk '{print $5}')
 echo "Total alchemical ddG of ${domain} is ${value} kcal/mol"
 echo ""
