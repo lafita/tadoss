@@ -36,14 +36,15 @@ ln -s /usr/bin/tadoss ~/tadoss
 
 ## Usage
 
-The method consist in four steps starting from a `PDB` file of a protein domain structure (`e1shgA1.pdb` as example).
+The method consist in four steps starting from a `PDB` file of a protein domain structure. 
+We demonstrate the usage with the SH3 domain in `e1shgA1.pdb` as an example.
 
 ### Bundle script
 
 In order to simplify the usage of the method, a `Bash` script that bundles the four steps steps is provided with a simple interface to the user.
 
 ```
-tadoss -d ubq -f e1shgA1.pdb
+tadoss -d sh3 -f e1shgA1.pdb
 ```
 
 ### Steps
