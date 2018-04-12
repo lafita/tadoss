@@ -1,37 +1,35 @@
-# TADOSS - TAndem DOmain Swap Stability prediction
+# TADOSS - TAndem DOmain Swap Stability predictor
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-TADOSS estimates the stability of tandem domain swap conformations using an alchemical approximation based on coarse-grained (Go-like) simulation models from the three-dimensional structure of a protein domain.
+`TADOSS` estimates the stability of tandem domain swap conformations using an alchemical approximation based on coarse-grained (Go-like) simulation models from the three-dimensional structure of a protein domain.
 
 The stability is defined as the relative free energy difference (ΔΔG) between the native and swap conformations of a pair of tandem identical domains. More information about the energetic model can be found [here](TODO).
 
-## Installation
+## Requirements
 
-### Requirements
-
-- Python 2.7: https://www.python.org/download/releases/2.7
-- BioPython: http://biopython.org/wiki/Download
+- `Python` 2.7: https://www.python.org/download/releases/2.7
+- `BioPython`: http://biopython.org/wiki/Download
 - One of the following two:
-  - GROMACS 5.0 or higher: http://manual.gromacs.org/documentation
-  - Reduce: http://kinemage.biochem.duke.edu/software/reduce.php
+  - `GROMACS` 5.0 or higher: http://manual.gromacs.org/documentation
+  - `Reduce`: http://kinemage.biochem.duke.edu/software/reduce.php
 
-Additional
-- R version 3.4 or higher https://www.r-project.org, including:
-  - ggplot2
-  - optparse
-- Molecular 3D viewer:
-  - PyMOL: https://pymol.org/2
-  - Chimera: https://www.cgl.ucsf.edu/chimera/download.html
+Additional requirements
+- `R` version 3.4 or higher https://www.r-project.org, including:
+  - `ggplot2`
+  - `optparse`
+- Recommended molecular 3D viewers:
+  - `PyMOL`: https://pymol.org/2
+  - `Chimera`: https://www.cgl.ucsf.edu/chimera/download.html
 
-### Setup
+## Installation
 
 1. Make sure you have installed the required software and packages (see above).
 2. Clone this repository to your desired location.
 ```bash
 git clone git@github.com:lafita/tadoss.git ~/tadoss
 ```
-3. Optional: make tadoss accessible in your `PATH` to access it from anywhere.
+3. Optional: make `tadoss` accessible in your `PATH` to access it from anywhere.
 ```bash
 ln -s /usr/bin/tadoss ~/tadoss
 ```
@@ -50,7 +48,7 @@ tadoss -d ubq -f e1shgA1.pdb
 
 ### Individual steps
 
-Each of the steps can also be run separately to allow more flexibility and control to users.
+Each of the steps can also be run separately to allow more flexibility and control to the users.
 
 1. Download and prepare the domain structure (ECOD domain `e1shgA1` as example):
 ```bash
@@ -81,21 +79,22 @@ python2.7 ~/tadoss/go_builder/go_builder.py -k sh3 --gmx tmp/sh3_hadded.pdb
 The generated native contact energies are listed in file `go_sh3/go_sh3_gomodel_golist.dat`.
 Other files are not needed for domain swap stability estimation.
 
-The first two columns of the file contain the pair of residues forming the contact (i,j), the third column contains the distance between them in Amstrongs and the last column is the absolute GO energy of the interaction in kcal/mol.
+The first two columns of the file contain the pair of residues forming the contact (i,j), the third column contains their distance in Amstrongs and the last column is the absolute Go energy of the interaction in kcal/mol.
 
-4. Alchemical domain swap stability estimation from the GO model contact energies:
+4. Alchemical domain swap stability estimation from the Go model contact energies:
 ```
 python ~/tadoss/tadoss.py sh3 tmp/sh3_hadded.pdb
 ```
+Use the `-h` (help) option to see all the available options, including linker and hinge lengths:
+
 
 ### Results
 
-Results are split into two files: [sh3-dG_cut.tsv](example/sh3-dG_cut.tsv) and [sh3-dG_join.tsv](example/sh3-dG_join.tsv).
+The results are split into different files
+- [sh3-dG_cut.tsv](example/sh3-dG_cut.tsv)
+- [sh3-dG_join.tsv](example/sh3-dG_join.tsv)
+- [sh3-ddG_tot.tsv](example/sh3-ddG_tot.tsv)
 
-The final free energy difference (ΔΔG) can be obtained by summing up the contributions in each file:
-```
-ΔΔG = ΔGjoin + ΔGcut
-```
 
 ### Visualization
 
