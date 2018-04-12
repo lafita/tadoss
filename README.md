@@ -26,7 +26,7 @@ Additional requirements
 
 1. Make sure you have installed the required software and packages (see above).
 2. Clone this repository to your desired location.
-```bash
+```
 git clone git@github.com:lafita/tadoss.git ~/tadoss
 ```
 3. Optional: make `tadoss` accessible in your `PATH` to access it from anywhere.
@@ -42,31 +42,31 @@ The method consist in four steps starting from a `PDB` file of a protein domain 
 
 In order to simplify the usage of the method, a `Bash` script that bundles the four steps steps is provided with a simple interface to the user.
 
-```bash
+```
 tadoss -d ubq -f e1shgA1.pdb
 ```
 
-### Individual steps
+### Steps
 
 Each of the steps can also be run separately to allow more flexibility and control to the users.
 
 1. Download and prepare the domain structure (ECOD domain `e1shgA1` as example):
-```bash
+```
 # Under the example folder in this repository
 cd example
 mkdir tmp # temporary intermediate files will be stored here
 ```
-```bash
+```
 # Select only protein residues from the structure
 python2.7 ~/tadoss/trim_nonprotein.py e1shgA1.pdb tmp/sh3_protein.pdb
 ```
 
 2. Add missing hydrogens to the structure:
-```bash
+```
 # Using GROMACS
 gmx pdb2gmx -f tmp/sh3_protein.pdb -o tmp/sh3_hadded.pdb -ignh <<< $'14\n3'
 ```
-```bash
+```
 # Using Reduce (use the path to the "reduce" script)
 reduce tmp/sh3_protein.pdb > tmp/sh3_hadeed.pdb
 ```
@@ -88,23 +88,42 @@ python ~/tadoss/tadoss.py sh3 tmp/sh3_hadded.pdb
 Use the `-h` (help) option to see all the available options, including linker and hinge lengths:
 
 
-### Results
+## Results
 
-The results are split into the following files:
+The results are split into the following table files:
 
 - [sh3-dG_cut.tsv](example/sh3-dG_cut.tsv): with the length of hinge loops (`Lhinge`), the residue `position`, and the alchemical cut free energy (`dGcut`) representing the penalty of creating a hinge loop centered at the position.
 - [sh3-dG_join.tsv](example/sh3-dG_join.tsv): with the free residues (without contacts) at the N and C termini (`free_N` and `free_C`), the distance (`dist_NC`) and angle (`angle_NC`) between the N and C termini, the length of the inter-domain linker as a parameter (`Llinker`), the `M` parameter and the alchemical free energy of connecting the termini (`dGjoin`).
 - [sh3-ddG_tot.tsv](example/sh3-ddG_tot.tsv): with the `length` of the domain, the free energy of joining and cutting the domain (`dGjoin` and `max_dGc`) and the total alchemical free energy: `ddGtot = dGjoin + max_dGcut`.
 
 
+## Visualization
 
-### Visualization
+In order to visualize the mapping of the alchemical free energy onto the native domain structure, a new `PDB` file [sh3-dG_cut.pdb](example/sh3-dG_cut.pdb) is generated with the `ΔGc` values in the B-factor column.
+To take a look at it in `PyMOL`, open the structure and select `Action` > `preset` > `b factor putty` to obtain a representation like the one below:
 
-In order to visualize the mapping of the profile ΔGc onto the native domain structure, a new PDB file `ubq-dG_cut.pdb` is also generated with the ΔGc values in the B-factor column. Using a molecular viewer like Pymol, residues can be colored according to their ΔGc values.
+![pymol](example/sh3-dG_cut.png)
 
-In addition, two R scripts are provided to visualize the results.
+In addition, two R scripts are provided to plot the free energy profile of the domain as a barplot and the Go contacts as a matrix.
+Use the following commands:
+
+```
+Rscript ~/tadoss/go_contacts.R -i go_sh3/go_sh3_gomodel_golist.dat -o sh3_go-contacts.pdf
+```
+
+![contacts](example/sh3_go-contacts.jpg)
+
+```
+Rscript ~/tadoss/dGc_profile.R -i sh3-dG_cut.tsv -o sh3-dG_cut.pdf
+```
+
+![profile](example/sh3-dG_cut.pdf)
+
 
 ## Publications
 
 - Manuscript in preparation.
 - Original description by Tian and Best (2016): https://doi.org/10.1371/journal.pcbi.1004933
+
+## FAQ
+
