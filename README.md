@@ -3,7 +3,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 TADOSS estimates the stability of tandem domain swap conformations using an alchemical approximation based on coarse-grained (Go-like) simulation models from the three-dimensional structure of a protein domain.
-The stability is defined as the relative free energy difference (ΔΔG) between the native and swap conformations of a pair of tandem identical domains.
+
+The stability is defined as the relative free energy difference (ΔΔG) between the native and swap conformations of a pair of tandem identical domains. More information about the energetic model can be found [here](TODO).
 
 ## Installation
 
@@ -95,8 +96,6 @@ The final free energy difference (ΔΔG) can be obtained by summing up the contr
 ```
 ΔΔG = ΔGjoin + ΔGcut
 ```
-
-More information about the output can be found here.
 
 ### Visualization
 
