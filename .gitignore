@@ -1,0 +1,8 @@
+
+# python
+*.pyc
+
+# R
+.Rhistory
+.RData
+
