@@ -52,17 +52,18 @@
   warnings.warn(msg, PDBConstructionWarning)
 /Users/aleixlafita/anaconda2/lib/python2.7/site-packages/Bio/PDB/Atom.py:98: PDBConstructionWarning: Used element 'O' for Atom (name=O2) with given element ''
   warnings.warn(msg, PDBConstructionWarning)
-1   Parsing PDB file...
-2   Parsing contact energies between residues...
-    Free resdiues at the N and C terminal: 0, 0
-    Distance N to C teminal: 7.0 A
-    Distance N+4 to C-5 teminal: 6.3 A
-    Angle between N and C temini: 0.7 rad
+1  Parsing PDB file...
+2  Parsing contact energies between residues...
+   Free resdiues at the N and C terminal: 0, 0
+   Distance N to C teminal: 7.0 A
+   Distance N+4 to C-5 teminal: 6.3 A
+   Angle between N and C temini: 0.7 rad
     Parameter M set to 2.1
-3   Calculating the dG of the tandem domain swap...
-3.1 The dG contribution of joining termini is -6.1 kcal/mol
-3.2 The max dG cut position in the structure is -0.7 kcal/mol
-4   Saving results for sh3
-4.1 Saving dGjoin and domain information to 'sh3-dG_join.tsv'
-4.2 Saving dGcut profile to 'sh3-dG_cut.tsv'
-4.3 Saving PDB structure with dGcut in B-factors to 'sh3-dG_cut.pdb'
+3  Calculating the dG of the tandem domain swap...
+   The dG contribution of joining termini is -6.1 kcal/mol
+   The max dG cut position in the structure is -1.0 kcal/mol
+4  Saving results for sh3
+   Saving dGjoin and domain information to 'sh3-dG_join.tsv'
+   Saving dGcut profile to 'sh3-dG_cut.tsv'
+   Saving PDB structure with dGcut in B-factors to 'sh3-dG_cut.pdb'
+   Saving total alchemical ddG = dGjoin + max(dGcut) to 'sh3-ddG_tot.tsv'

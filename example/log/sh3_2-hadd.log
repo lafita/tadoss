@@ -1,3 +1,4 @@
+Using GROMACS in gmx
                      :-) GROMACS - gmx pdb2gmx, 2016.3 (-:
 
                             GROMACS is written by:
@@ -26,7 +27,7 @@ of the License, or (at your option) any later version.
 GROMACS:      gmx pdb2gmx, version 2016.3
 Executable:   /usr/local/bin/../Cellar/gromacs/2016.3/bin/gmx
 Data prefix:  /usr/local/bin/../Cellar/gromacs/2016.3
-Working dir:  /Users/aleixlafita/alchemical-dG/example
+Working dir:  /Users/aleixlafita/tadoss/example
 Command line:
   gmx pdb2gmx -f tmp/sh3_protein.pdb -o tmp/sh3_hadded.pdb -p tmp/sh3_remove.top -i tmp/sh3_remove.itp -ignh
 
@@ -79,7 +80,7 @@ Writing topology
 
 Writing coordinate file...
 
-GROMACS reminds you: "It's So Lonely When You Don't Even Know Yourself" (Red Hot Chili Peppers)
+GROMACS reminds you: "Life in the streets is not easy" (Marky Mark)
 
 
 Select the Force Field:
