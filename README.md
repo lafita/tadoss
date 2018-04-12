@@ -117,7 +117,7 @@ Rscript ~/tadoss/go_contacts.R -i go_sh3/go_sh3_gomodel_golist.dat -o sh3_go-con
 Rscript ~/tadoss/dGc_profile.R -i sh3-dG_cut.tsv -o sh3-dG_cut.pdf
 ```
 
-![profile](example/sh3-dG_cut.pdf)
+![profile](example/sh3-dG_cut.jpg)
 
 
 ## Publications
@@ -125,5 +125,14 @@ Rscript ~/tadoss/dGc_profile.R -i sh3-dG_cut.tsv -o sh3-dG_cut.pdf
 - Manuscript in preparation.
 - Original description by Tian and Best (2016): https://doi.org/10.1371/journal.pcbi.1004933
 
+
 ## FAQ
 
+#### What does a positive total alchemical free energy (ΔΔG) mean?
+
+As defined by our model `ΔΔG = ΔG(native) - ΔG(swap)`, therefore a positive `ΔΔG` means that the domain swap conformation of the tandem domains is more stable than the native domains in tandem (non-swapped).
+
+#### Why are Go contact energies positive in the `go_sh3/go_sh3_gomodel_golist.dat` file? 
+
+The file [go_sh3/go_sh3_gomodel_golist.dat](go_sh3/go_sh3_gomodel_golist.dat) contains the absolute value of the contact energies, in kcal/mol. 
+The value of the Go energy is the negative of that.
