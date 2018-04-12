@@ -4,7 +4,7 @@
 
 `TADOSS` estimates the stability of tandem domain swap conformations using an alchemical approximation based on coarse-grained (Go-like) simulation models from the three-dimensional structure of a protein domain.
 
-The stability is defined as the relative free energy difference (ΔΔG) between the native and swap conformations of a pair of tandem identical domains. More information about the energetic model can be found [here](TODO).
+The stability is defined as the relative free energy difference (`ΔΔG`) between the native and swap conformations of a pair of tandem identical domains. More information about the energetic model can be found [here](TODO).
 
 ## Requirements
 
@@ -131,8 +131,9 @@ Rscript ~/tadoss/dGc_profile.R -i sh3-dG_cut.tsv -o sh3-dG_cut.pdf
 #### What does a positive total alchemical free energy (ΔΔG) mean?
 
 As defined by our model `ΔΔG = ΔG(native) - ΔG(swap)`, therefore a positive `ΔΔG` means that the domain swap conformation of the tandem domains is more stable than the native domains in tandem (non-swapped).
+Analogously, the more negative the `ΔΔG`, the more stable the native conformation is relative to the domain swap.
 
-#### Why are Go contact energies positive in the `go_sh3/go_sh3_gomodel_golist.dat` file? 
+#### Why are Go contact energies positive?
 
-The file [go_sh3/go_sh3_gomodel_golist.dat](go_sh3/go_sh3_gomodel_golist.dat) contains the absolute value of the contact energies, in kcal/mol. 
+The file [go_sh3/go_sh3_gomodel_golist.dat](example/go_sh3/go_sh3_gomodel_golist.dat) contains the absolute value of the contact energies, in kcal/mol. 
 The value of the Go energy is the negative of that.
