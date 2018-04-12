@@ -90,10 +90,12 @@ Use the `-h` (help) option to see all the available options, including linker an
 
 ### Results
 
-The results are split into different files
-- [sh3-dG_cut.tsv](example/sh3-dG_cut.tsv)
-- [sh3-dG_join.tsv](example/sh3-dG_join.tsv)
-- [sh3-ddG_tot.tsv](example/sh3-ddG_tot.tsv)
+The results are split into the following files:
+
+- [sh3-dG_cut.tsv](example/sh3-dG_cut.tsv): with the length of hinge loops (`Lhinge`), the residue `position`, and the alchemical cut free energy (`dGcut`) representing the penalty of creating a hinge loop centered at the position.
+- [sh3-dG_join.tsv](example/sh3-dG_join.tsv): with the free residues (without contacts) at the N and C termini (`free_N` and `free_C`), the distance (`dist_NC`) and angle (`angle_NC`) between the N and C termini, the length of the inter-domain linker as a parameter (`Llinker`), the `M` parameter and the alchemical free energy of connecting the termini (`dGjoin`).
+- [sh3-ddG_tot.tsv](example/sh3-ddG_tot.tsv): with the `length` of the domain, the free energy of joining and cutting the domain (`dGjoin` and `max_dGc`) and the total alchemical free energy: `ddGtot = dGjoin + max_dGcut`.
+
 
 
 ### Visualization
