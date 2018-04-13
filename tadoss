@@ -89,6 +89,7 @@ path=`dirname $0`
   rm ${domain}-dG_cut.pdb
   rm ${domain}-dG_cut.tsv
   rm ${domain}-dG_join.tsv
+  rm ${domain}-ddG_tot.tsv
 } &> /dev/null
 
 
@@ -135,7 +136,7 @@ echo "Step 4 - calculate the alchemical ddG of the domain"
   python2.7 ${path}/tadoss.py ${domain} tmp/${domain}_hadded.pdb -w
 } &> log/${domain}_4-ddG.log
 
-if [ ! -f ${domain}-dG_join.tsv ]; then
+if [ ! -f ${domain}-ddG_tot.tsv ]; then
   echo "Failed: see log/${domain}_4-ddG.log"
   exit 1
 fi
