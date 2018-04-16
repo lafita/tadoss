@@ -103,22 +103,22 @@ The results are split into the following table files:
 In order to visualize the mapping of the alchemical free energy onto the native domain structure, a new `PDB` file [sh3-dG_cut.pdb](example/sh3-dG_cut.pdb) is generated with the `ΔGc` values in the B-factor column.
 To take a look at it in `PyMOL`, open the structure and select `Action` > `preset` > `b factor putty` to obtain a representation like the one below:
 
-![pymol](example/sh3-dG_cut.png)
+<img src="example/sh3-dG_cut.png" width="400">
 
 In addition, two R scripts are provided to plot the free energy profile of the domain as a barplot and the Go contacts as a matrix.
 Use the following commands:
 
 ```
-Rscript ~/tadoss/go_contacts.R -i go_sh3/go_sh3_gomodel_golist.dat -o sh3_go-contacts.pdf
-```
-
-![contacts](example/sh3_go-contacts.jpg)
-
-```
 Rscript ~/tadoss/dGc_profile.R -i sh3-dG_cut.tsv -o sh3-dG_cut.pdf
 ```
 
-![profile](example/sh3-dG_cut.jpg)
+<img src="example/sh3-dG_cut.jpg" width="400">
+
+```
+Rscript ~/tadoss/go_contacts.R -i go_sh3/go_sh3_gomodel_golist.dat -o sh3_go-contacts.pdf
+```
+
+<img src="example/sh3_go-contacts.jpg" width="400">
 
 
 ## Publications
