@@ -69,7 +69,7 @@ gmx pdb2gmx -f tmp/sh3_protein.pdb -o tmp/sh3_hadded.pdb -ignh <<< $'14\n3'
 ```
 ```
 # Using Reduce (use the path to the "reduce" script)
-reduce tmp/sh3_protein.pdb > tmp/sh3_hadeed.pdb
+reduce tmp/sh3_protein.pdb > tmp/sh3_hadded.pdb
 ```
 
 3. Generate native contact energy (Go model) from the structure:
@@ -138,3 +138,9 @@ Analogously, the more negative the `ΔΔG`, the more stable the native conformat
 
 The file [go_sh3/go_sh3_gomodel_golist.dat](example/go_sh3/go_sh3_gomodel_golist.dat) contains the absolute value of the contact energies, in kcal/mol. 
 The value of the Go energy is the negative of that.
+
+#### How are the residue indices in the output files generated?
+
+The residue positions in the output file [sh3-dG_cut.tsv](example/sh3-dG_cut.tsv) are the indices of the residues in the input structure. 
+This indices are different from the residue numbers in the input PDB file and independent to the original amino acid sequence of the protein, i.e. they are only relating to the amino acids in the input structure and their sequential order.
+
