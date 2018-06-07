@@ -21,6 +21,8 @@ More information at: https://github.com/lafita/tadoss
 -------------------------------------------------------------------
 "
 
+path="$(dirname "$(readlink -f "$0")")"
+
 # Handle the inputs and help
 usage="$(basename "$0") -f [file.pdb] [-h] [-d domain] [-g gmx] [-r reduce]
 
@@ -30,6 +32,8 @@ where:
     -d  domain name (default: query)
     -g  location of GROMACS binary (default: gmx)
     -r  location of Reduce binary
+
+Source code in: ${path}
 
 "
 
@@ -72,8 +76,6 @@ if [ "$file" == "" ]; then
   echo "$usage"
   exit 1
 fi
-
-path=`dirname $0`
 
 # Create the log and tmp directories if not yet there
 {
