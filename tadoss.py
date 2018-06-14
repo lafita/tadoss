@@ -139,96 +139,117 @@ for c in contacts:
     if c[1] > free_C:
         free_C = c[1]
 
-free_N = int(free_N) - 1
-free_C = L_p - int(free_C)
+free_N_real = int(free_N) - 1
+free_C_real = L_p - int(free_C)
 
-print "   Free resdiues at the N and C terminal: {}, {}".format(free_N, free_C)
+free_N_list = []
+free_C_list = []
+free_NC_indx = 0
+dist_NC_list = []
+angle_NC_list = []
+dG_joinNC_list = []
+M_list = []
 
-dist_NC = res_list[L_p - free_C - 1]['CA'] - res_list[free_N]['CA']
-dist_NC4 = res_list[L_p - free_C - 5]['CA'] - res_list[free_N+4]['CA']
+for free_N in range(0,max(10, free_N_real)):
+    for free_C in range(0,max(10, free_C_real)):
 
-print "   Distance N to C teminal: {} A".format(round(dist_NC,1))
-print "   Distance N+4 to C-5 teminal: {} A".format(round(dist_NC4,1))
+        print "   Free resdiues at the N and C terminal: {}, {}".format(free_N, free_C)
 
-# Calculate the angle between the N and the C termini
-c_ter_res1 = res_list[L_p - free_C - 1]['CA'].get_vector()  # get the coordinates of residue C_i
-c_ter_res2 = res_list[L_p - free_C - 5]['CA'].get_vector()  # get the coordinates of the residue C_i - 4
+        dist_NC = res_list[L_p - free_C - 1]['CA'] - res_list[free_N]['CA']
+        dist_NC4 = res_list[L_p - free_C - 5]['CA'] - res_list[free_N+4]['CA']
 
-n_ter_res1 = res_list[free_N]['CA'].get_vector()  # get the coordinates of residue N_j
-n_ter_res2 = res_list[free_N + 4]['CA'].get_vector()  # get the coordinates of the residue N_j + 4
+        print "   Distance N to C teminal: {} A".format(round(dist_NC,1))
+        print "   Distance N+4 to C-5 teminal: {} A".format(round(dist_NC4,1))
 
-v1 = np.array(c_ter_res1) - np.array(c_ter_res2)  # get the direction of the C-terminus
-v2 = np.array(n_ter_res1) - np.array(n_ter_res2)  # get the direction of the N-terminus
+        # Calculate the angle between the N and the C termini
+        c_ter_res1 = res_list[L_p - free_C - 1]['CA'].get_vector()  # get the coordinates of residue C_i
+        c_ter_res2 = res_list[L_p - free_C - 5]['CA'].get_vector()  # get the coordinates of the residue C_i - 4
 
-angle_NC = angle(v1, v2)  # calculate the angle between N and C - terminus
+        n_ter_res1 = res_list[free_N]['CA'].get_vector()  # get the coordinates of residue N_j
+        n_ter_res2 = res_list[free_N + 4]['CA'].get_vector()  # get the coordinates of the residue N_j + 4
 
-print "   Angle between N and C temini: {} rad".format(round(angle_NC, 1))
+        v1 = np.array(c_ter_res1) - np.array(c_ter_res2)  # get the direction of the C-terminus
+        v2 = np.array(n_ter_res1) - np.array(n_ter_res2)  # get the direction of the N-terminus
 
-if M < 0:
-    # Case 1, they are pointing away to each other (loop needed)
-    if dist_NC4 < dist_NC:
-        # instead of M = 0 or 6 as the origional paper, use the effective residue distance M' = 6*sin(ang/2)
-        M = 6 * sin(angle_NC / 2)
+        angle_NC = angle(v1, v2)  # calculate the angle between N and C - terminus
 
-    # Case 2, they are pointing to each other (no loop needed)
-    else:
-        M = 0
+        print "   Angle between N and C temini: {} rad".format(round(angle_NC, 1))
 
-    print "    Parameter M set to {}".format(round(M,1))
+        if M < 0:
+            # Case 1, they are pointing away to each other (loop needed)
+            if dist_NC4 < dist_NC:
+                # instead of M = 0 or 6 as the origional paper, use the effective residue distance M' = 6*sin(ang/2)
+                M = 6 * sin(angle_NC / 2)
 
+            # Case 2, they are pointing to each other (no loop needed)
+            else:
+                M = 0
 
-print "3  Calculating the dG of the tandem domain swap..."
-
-# Free energy change (dG_J) of joining the N- and C- termini
-
-energy = [0] * break_L * break_L  # List of enthalpy contribution from different i,j combination for dG_J
-entropy = [0] * break_L * break_L  # List of entropy contribution
-
-zero = False
-
-for i in range(break_L):
-    for j in range(break_L):
-
-        # Approximation of the entropy per residue on N-termini (lost in WT, gained in SWAP)
-        entropy[i * break_L + j] += dS * Tref * (i)
-
-        # Approximation of the entropy per residue on C-termini.
-        entropy[i * break_L + j] += dS * Tref * (j)
-
-        # Adjust the residue indices to the first and last residues in the domain
-        n_i = i + free_N + 1
-        c_i = L_p - j - free_C
-        uniq_ij = []
-
-        # The topological requirement of joining the two termini by peeling off residues
-        if (i + j - M + linker) * r0 > (res_list[n_i - 1]['CA'] - res_list[c_i - 1]['CA']):
-            if i == 0 and j == 0:
-                zero = True # Indicate that the (0,0) solution is good
-
-            for t in range(len(contacts)):
-                for ii in range(1, n_i) + range(c_i + 1, L_p + 1):
-                    if ii == contacts[t, 0] or ii == contacts[t, 1]:
-                        if (contacts[t, 0], contacts[t, 1]) not in uniq_ij:
-
-                            # Energy of native contacts (formed in WT, lost in SWAP)
-                            energy[i * break_L + j] -= contacts[t, 3]
-                            uniq_ij.append((contacts[t, 0], contacts[t, 1]))
-
-# This automatically removes the (0,0) soution even if it is valid, which gives a 0 kcal/mol value
-non_zero_ind = np.nonzero(np.array(energy))
-energy_array = np.array(energy)[non_zero_ind]
-entropy_array = np.array(entropy)[non_zero_ind]
-
-# The minimum change of stabilities
-dG_J = entropy_array + energy_array
-
-dG_joinNC = max(dG_J)
-
-if zero:
-    dG_joinNC = max(max(dG_J),0)
+            print "    Parameter M set to {}".format(round(M,1))
 
 
-print "   The dG contribution of joining termini is {} kcal/mol".format(round(dG_joinNC,1))
+        print "3  Calculating the dG of the tandem domain swap..."
+
+        # Free energy change (dG_J) of joining the N- and C- termini
+
+        energy = [0] * break_L * break_L  # List of enthalpy contribution from different i,j combination for dG_J
+        entropy = [0] * break_L * break_L  # List of entropy contribution
+
+        zero = False
+
+        for i in range(break_L):
+            for j in range(break_L):
+
+                # Approximation of the entropy per residue on N-termini (lost in WT, gained in SWAP)
+                entropy[i * break_L + j] += dS * Tref * (i)
+
+                # Approximation of the entropy per residue on C-termini.
+                entropy[i * break_L + j] += dS * Tref * (j)
+
+                # Adjust the residue indices to the first and last residues in the domain
+                n_i = i + free_N + 1
+                c_i = L_p - j - free_C
+                uniq_ij = []
+
+                # The topological requirement of joining the two termini by peeling off residues
+                if (i + j - M + linker) * r0 > (res_list[n_i - 1]['CA'] - res_list[c_i - 1]['CA']):
+                    if i == 0 and j == 0:
+                        zero = True # Indicate that the (0,0) solution is good
+
+                    for t in range(len(contacts)):
+                        for ii in range(1, n_i) + range(c_i + 1, L_p + 1):
+                            if ii == contacts[t, 0] or ii == contacts[t, 1]:
+                                if (contacts[t, 0], contacts[t, 1]) not in uniq_ij:
+
+                                    # Energy of native contacts (formed in WT, lost in SWAP)
+                                    energy[i * break_L + j] -= contacts[t, 3]
+                                    uniq_ij.append((contacts[t, 0], contacts[t, 1]))
+
+        # This automatically removes the (0,0) soution even if it is valid, which gives a 0 kcal/mol value
+        non_zero_ind = np.nonzero(np.array(energy))
+        energy_array = np.array(energy)[non_zero_ind]
+        entropy_array = np.array(entropy)[non_zero_ind]
+
+        # The minimum change of stabilities
+        dG_J = entropy_array + energy_array
+
+        dG_joinNC = max(dG_J)
+
+        if zero:
+            dG_joinNC = max(max(dG_J),0)
+
+
+        print "   The dG contribution of joining termini is {} kcal/mol".format(round(dG_joinNC,1))
+
+        if free_N == free_N_real & free_C == free_C_real:
+            free_NC_indx = len(free_N_list+1)
+
+        free_N_list.append(free_N)
+        free_C_list.append(free_C)
+        dist_NC_list.append(dist_NC)
+        angle_NC_list.append(angle_NC)
+        dG_joinNC_list.append(dG_joinNC)
+        M_list.append(M)
 
 
 # Free energy change (dG_C) of cutting at certain positions of the structure
@@ -287,8 +308,10 @@ print "   Saving dGjoin and domain information to '{}-dG_join.tsv'".format(domai
 with open('{}-dG_join.tsv'.format(domain), 'w') as fout:
 
     fout.write('domain\tfree_N\tfree_C\tdist_NC\tLlinker\tangle_NC\tM\tdGjoin\n')
-    fout.write('{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format(domain, free_N, free_C, dist_NC,
-                                                         linker, angle_NC, M, dG_joinNC))
+    for i in range(0, len(free_N_list)):
+        fout.write('{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format(
+            domain, free_N_list[i], free_C_list[i], dist_NC_list[i],
+            linker, angle_NC_list[i], M_list[i], dG_joinNC_list[i]))
 
 
 print "   Saving dGcut profile to '{}-dG_cut.tsv'".format(domain)
@@ -319,5 +342,6 @@ print "   Saving total alchemical ddG = dGjoin + max(dGcut) to '{}-ddG_tot.tsv'"
 with open('{}-ddG_tot.tsv'.format(domain), 'w') as fout:
 
     fout.write('domain\tlength\tdGjoin\tmax_dGc\tddGtot\n')
-    fout.write('{}\t{}\t{}\t{}\t{}\n'.format(domain, L_p, dG_joinNC, max_dGc, dG_joinNC+max_dGc))
+    fout.write('{}\t{}\t{}\t{}\t{}\n'.format(domain, L_p, dG_joinNC_list[free_NC_indx],
+                                             max_dGc, dG_joinNC_list[free_NC_indx]+max_dGc))
 
