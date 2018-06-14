@@ -6,3 +6,5 @@
 .Rhistory
 .RData
 
+# PyCharm IDE
+.idea
