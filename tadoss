@@ -21,7 +21,7 @@ More information at: https://github.com/lafita/tadoss
 -------------------------------------------------------------------
 "
 
-path="$(dirname "$(readlink -f "$0")")"
+path=`dirname $0`
 
 # Handle the inputs and help
 usage="$(basename "$0") -f [file.pdb] [-h] [-d domain] [-g gmx] [-r reduce]
