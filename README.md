@@ -26,13 +26,10 @@ Additional requirements
 
 1. Make sure you have installed the required software and packages (see above).
 2. Clone this repository to your desired location.
-```
+```bash
 git clone git@github.com:lafita/tadoss.git ~/tadoss
 ```
-3. Optional: make `tadoss` accessible in your `PATH` to access it from anywhere.
-```bash
-ln -s /usr/bin/tadoss ~/tadoss
-```
+3. Optional: add `tadoss` to your `PATH` (symlinks do not currently work).
 
 ## Usage
 
@@ -44,7 +41,7 @@ We demonstrate the usage with the SH3 domain in `e1shgA1.pdb` as an example.
 In order to simplify the usage of the method, a `Bash` script that bundles the four steps steps is provided with a simple interface to the user.
 
 ```
-tadoss -d sh3 -f e1shgA1.pdb
+~/tadoss/tadoss -d sh3 -f e1shgA1.pdb
 ```
 
 ### Steps
