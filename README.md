@@ -14,7 +14,7 @@ The stability is defined as the relative free energy difference (`ΔΔG`) betwee
   - `GROMACS` 5.0 or higher: http://manual.gromacs.org/documentation
   - `Reduce`: http://kinemage.biochem.duke.edu/software/reduce.php
 
-Additional requirements
+Other recommended software:
 - `R` version 3.4 or higher https://www.r-project.org, including:
   - `ggplot2`
   - `optparse`
