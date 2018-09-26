@@ -71,7 +71,7 @@ reduce tmp/sh3_protein.pdb > tmp/sh3_hadded.pdb
 
 3. Generate native contact energy (Go model) from the structure:
 ```
-python2.7 ~/tadoss/go_builder/go_builder.py -k sh3 --gmx tmp/sh3_hadded.pdb
+python2 ~/tadoss/go_builder/go_builder.py -k sh3 --gmx tmp/sh3_hadded.pdb
 ```
 
 The generated native contact energies are listed in file `go_sh3/go_sh3_gomodel_golist.dat`.
@@ -81,7 +81,7 @@ The first two columns of the file contain the pair of residues forming the conta
 
 4. Alchemical domain swap stability estimation from the Go model contact energies:
 ```
-python ~/tadoss/tadoss.py sh3 tmp/sh3_hadded.pdb
+python2 ~/tadoss/tadoss.py sh3 tmp/sh3_hadded.pdb
 ```
 Use the `-h` (help) option to see all the available options, including linker and hinge lengths:
 
