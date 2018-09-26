@@ -44,7 +44,7 @@ In order to simplify the usage of the method, a `Bash` script that bundles the f
 ~/tadoss/tadoss -d sh3 -f e1shgA1.pdb
 ```
 
-### Steps
+### Step by step calculation
 
 Each of the steps can also be run separately to allow more flexibility and control to the users.
 
