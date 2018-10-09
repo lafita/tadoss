@@ -86,9 +86,9 @@ python2 ~/tadoss/tadoss.py sh3 tmp/sh3_hadded.pdb
 Use the `-h` (help) option to see all the available options, including linker and hinge lengths:
 
 
-## Results
+## Output
 
-The results are split into the following table files:
+The output results are split into the following files in table format:
 
 - [sh3-dG_cut.tsv](example/sh3-dG_cut.tsv): with the length of hinge loops (`Lhinge`), the residue `position`, and the alchemical cut free energy (`dGcut`) representing the penalty of creating a hinge loop centered at the position.
 - [sh3-dG_join.tsv](example/sh3-dG_join.tsv): with the free residues (without contacts) at the N and C termini (`free_N` and `free_C`), the distance (`dist_NC`) and angle (`angle_NC`) between the N and C termini, the length of the inter-domain linker as a parameter (`Llinker`), the `M` parameter and the alchemical free energy of connecting the termini (`dGjoin`).
@@ -102,7 +102,7 @@ To take a look at it in `PyMOL`, open the structure and select `Action` > `prese
 
 <img src="example/sh3-dG_cut.png" width="400">
 
-In addition, two R scripts are provided to plot the free energy profile of the domain as a barplot and the Go contacts as a matrix.
+In addition, two R scripts are provided to plot the free energy profile and the contact matrix of the domains.
 Use the following commands:
 
 ```
@@ -118,13 +118,18 @@ Rscript ~/tadoss/go_contacts.R -i go_sh3/go_sh3_gomodel_golist.dat -o sh3_go-con
 <img src="example/sh3_go-contacts.jpg" width="400">
 
 
+## Census
+
+Alchemical free energy estimations by `TADOSS` for 129 manual representative domains from the topologies of the [ECOD](http://prodata.swmed.edu/ecod/) database can be found [here](census/ecod_topology_manual-reps.tsv).
+
+
 ## Publications
 
 - Manuscript in preparation.
 - Original description by Tian and Best (2016): https://doi.org/10.1371/journal.pcbi.1004933
 
 
-## FAQ
+## FAQs
 
 #### What does a positive total alchemical free energy (ΔΔG) mean?
 
