@@ -18,7 +18,7 @@ Other recommended software:
 - `R` version 3.4 or higher https://www.r-project.org, including:
   - `ggplot2`
   - `optparse`
-- Recommended molecular 3D viewers:
+- Molecular 3D viewers:
   - `PyMOL`: https://pymol.org/2
   - `Chimera`: https://www.cgl.ucsf.edu/chimera/download.html
 
@@ -29,7 +29,7 @@ Other recommended software:
 ```bash
 git clone git@github.com:lafita/tadoss.git ~/tadoss
 ```
-3. Optional: add `tadoss` to your `PATH` (symlinks do not currently work).
+3. Optional: add `~/tadoss` to your `PATH` (symlinks do not currently work).
 
 ## Usage
 
@@ -123,10 +123,11 @@ Rscript ~/tadoss/go_contacts.R -i go_sh3/go_sh3_gomodel_golist.dat -o sh3_go-con
 Alchemical free energy estimations by `TADOSS` for 129 manual representative domains from the topologies of the [ECOD](http://prodata.swmed.edu/ecod/) database can be found [here](census/ecod_topology_manual-reps.tsv).
 
 
-## Publications
+## Publication
 
-- Manuscript in preparation.
-- Original description by Tian and Best (2016): https://doi.org/10.1371/journal.pcbi.1004933
+The method is described in the following journal article:
+
+>Aleix Lafita, Pengfei Tian, Robert B Best, Alex Bateman. TADOSS: computational estimation of tandem domain swap stability, Bioinformatics (2018) https://doi.org/10.1093/bioinformatics/bty974
 
 
 ## FAQs
