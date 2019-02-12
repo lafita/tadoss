@@ -35,8 +35,9 @@ p = ggplot(golist, aes(x = i, y = j, fill=-energy)) +
   theme_bw() + theme(panel.grid = element_blank(), 
                      legend.position = "top") + 
   xlab("") + ylab("") +
+  scale_y_reverse() +
   scale_fill_continuous(name = "Go energy (kcal/mol)")
 
 pdf(opt$output, 5, 5.5)
 print(p)
-dev.off()
+log = dev.off()

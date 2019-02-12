@@ -22,7 +22,7 @@ data = read.csv(opt$input, sep="\t", header=T)
 
 p = ggplot(data, aes(y=dGcut, x=position)) + 
   geom_line(stat = "identity") + 
-  geom_hline(yintercept = 0) +
+  geom_hline(yintercept = 0, alpha = 0.4)+
   theme_bw() + theme(panel.grid = element_blank()) +
   scale_x_continuous(breaks = seq(min(data$position), max(data$position), 10)) +
   xlab("Position") + ylab(expression(paste(Delta,"Gc (kcal/mol)", sep="")))
