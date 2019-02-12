@@ -22,6 +22,12 @@ Other recommended software:
   - `PyMOL`: https://pymol.org/2
   - `Chimera`: https://www.cgl.ucsf.edu/chimera/download.html
 
+A [conda](https://conda.io) environment description is provided in [environment.yaml](environment.yaml). To install the requirements simply run:
+```bash
+conda env create --name tadoss --file environment.yaml
+conda activate tadoss
+```
+
 ## Installation
 
 1. Make sure you have installed the required software and packages (see above).
@@ -115,7 +121,7 @@ Rscript ~/tadoss/go_contacts.R -i go_sh3/go_sh3_gomodel_golist.dat -o sh3_go-con
 In order to visualize the mapping of the alchemical free energy onto the native domain structure, a new `PDB` file [sh3-dG\_cut.pdb](example/sh3-dG_cut.pdb) is generated with the `ΔGc` values in the B-factor column.
 To take a look at it in `PyMOL`, open the structure and select `Action` > `preset` > `b factor putty` to obtain a representation like the one below:
 
-<img src="example/sh3-dG_cut_structure.png" width="4000">
+<img src="example/sh3-dG_cut_structure.png" width="400">
 
 
 ## Census
