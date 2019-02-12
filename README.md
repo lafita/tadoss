@@ -18,7 +18,7 @@ Other recommended software:
 - `R` version 3.4 or higher https://www.r-project.org, including:
   - `ggplot2`
   - `optparse`
-- Recommended molecular 3D viewers:
+- Molecular 3D viewers:
   - `PyMOL`: https://pymol.org/2
   - `Chimera`: https://www.cgl.ucsf.edu/chimera/download.html
 
@@ -29,7 +29,7 @@ Other recommended software:
 ```bash
 git clone git@github.com:lafita/tadoss.git ~/tadoss
 ```
-3. Optional: add `tadoss` to your `PATH` (symlinks do not currently work).
+3. Optional: add `~/tadoss` to your `PATH` (symlinks do not currently work).
 
 ## Usage
 
@@ -86,9 +86,9 @@ python2 ~/tadoss/tadoss.py sh3 tmp/sh3_hadded.pdb
 Use the `-h` (help) option to see all the available options, including linker and hinge lengths:
 
 
-## Results
+## Output
 
-The results are split into the following table files:
+The output results are split into the following files in table format:
 
 - [sh3-dG_cut.tsv](example/sh3-dG_cut.tsv): with the length of hinge loops (`Lhinge`), the residue `position`, and the alchemical cut free energy (`dGcut`) representing the penalty of creating a hinge loop centered at the position.
 - [sh3-dG_join.tsv](example/sh3-dG_join.tsv): with the free residues (without contacts) at the N and C termini (`free_N` and `free_C`), the distance (`dist_NC`) and angle (`angle_NC`) between the N and C termini, the length of the inter-domain linker as a parameter (`Llinker`), the `M` parameter and the alchemical free energy of connecting the termini (`dGjoin`).
@@ -112,19 +112,25 @@ Rscript ~/tadoss/go_contacts.R -i go_sh3/go_sh3_gomodel_golist.dat -o sh3_go-con
 
 <img src="example/sh3_go-contacts.png" width="400">
 
-In order to visualize the mapping of the alchemical free energy onto the native domain structure, a new `PDB` file [sh3-dG_cut.pdb](example/sh3-dG_cut.pdb) is generated with the `ΔGc` values in the B-factor column.
+In order to visualize the mapping of the alchemical free energy onto the native domain structure, a new `PDB` file [sh3-dG\_cut.pdb](example/sh3-dG_cut.pdb) is generated with the `ΔGc` values in the B-factor column.
 To take a look at it in `PyMOL`, open the structure and select `Action` > `preset` > `b factor putty` to obtain a representation like the one below:
 
 <img src="example/sh3-dG_cut_structure.png" width="4000">
 
 
-## Publications
+## Census
 
-- Manuscript in preparation.
-- Original description by Tian and Best (2016): https://doi.org/10.1371/journal.pcbi.1004933
+Alchemical free energy estimations by `TADOSS` for 129 manual representative domains from the topologies of the [ECOD](http://prodata.swmed.edu/ecod/) database can be found [here](census/ecod_topology_manual-reps.tsv).
 
 
-## FAQ
+## Publication
+
+The method is described in the following journal article:
+
+>Aleix Lafita, Pengfei Tian, Robert B Best, Alex Bateman. TADOSS: computational estimation of tandem domain swap stability, Bioinformatics (2018) https://doi.org/10.1093/bioinformatics/bty974
+
+
+## FAQs
 
 #### What does a positive total alchemical free energy (ΔΔG) mean?
 
@@ -133,11 +139,11 @@ Analogously, the more negative the `ΔΔG`, the more stable the native conformat
 
 #### Why are Go contact energies positive?
 
-The file [go_sh3/go_sh3_gomodel_golist.dat](example/go_sh3/go_sh3_gomodel_golist.dat) contains the absolute value of the contact energies, in kcal/mol. 
+The file [go\_sh3/go\_sh3\_gomodel\_golist.dat](example/go_sh3/go_sh3_gomodel_golist.dat) contains the absolute value of the contact energies, in kcal/mol. 
 The value of the Go energy is the negative of that.
 
 #### How are the residue indices in the output files generated?
 
-The residue positions in the output file [sh3-dG_cut.tsv](example/sh3-dG_cut.tsv) are the indices of the residues in the input structure. 
+The residue positions in the output file [sh3-dG\_cut.tsv](example/sh3-dG_cut.tsv) are the indices of the residues in the input structure. 
 This indices are different from the residue numbers in the input PDB file and independent to the original amino acid sequence of the protein, i.e. they are only relating to the amino acids in the input structure and their sequential order.
 
