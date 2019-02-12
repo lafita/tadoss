@@ -1,0 +1,13 @@
+name: tadoss
+channels:
+  - conda-forge
+  - bioconda
+  - mx
+  #- r
+dependencies:
+  - python =2.7
+  - biopython =1.73
+  - gromacs =2018.3
+  - reduce =3.24
+  #- R =3.4.*
+  #- r-ggplot2 =3.0.0
