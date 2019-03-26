@@ -129,9 +129,9 @@ To take a look at it in `PyMOL`, open the structure and select `Action` > `prese
 Alchemical free energy estimations by `TADOSS` for 129 manual representative domains from the topologies of the [ECOD](http://prodata.swmed.edu/ecod/) database can be found [here](census/ecod_topology_manual-reps.tsv).
 
 
-## Publication
+## Citation
 
-The method is described in the following journal article:
+If you find this method useful, please consider citing the following publication, where you can also find more information:
 
 >Aleix Lafita, Pengfei Tian, Robert B Best, Alex Bateman. TADOSS: computational estimation of tandem domain swap stability, Bioinformatics (2018) https://doi.org/10.1093/bioinformatics/bty974
 
