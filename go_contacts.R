@@ -1,6 +1,18 @@
+# Plot the Go contact energy matrix of a protein
+# 
+# Aleix Lafita - April 2018
 
-library(optparse)
-library(ggplot2)
+suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(optparse))
+suppressPackageStartupMessages(library(ggplot2))
+
+contmat_theme = theme_bw() +theme(
+  panel.grid.minor = element_blank(),
+  #axis.text.x = element_text(angle = 90, hjust = 1),
+  legend.position = "right",
+  axis.title = element_blank()
+)
+theme_set(contmat_theme)
 
 # Parse the IO files from the CLI
 option_list = list(
@@ -27,17 +39,20 @@ golist_rev$i = golist_rev$j
 golist_rev$j = golist_rev$x
 golist_rev$x = NULL
 
-golist = rbind(golist, golist_rev)
+golist = rbind(golist, golist_rev) %>%
+  mutate(energy = -energy)
 
 # Contact matrix plot
-p = ggplot(golist, aes(x = i, y = j, fill=-energy)) + 
-  geom_tile() + 
-  theme_bw() + theme(panel.grid = element_blank(), 
-                     legend.position = "top") + 
-  xlab("") + ylab("") +
-  scale_y_reverse() +
-  scale_fill_continuous(name = "Go energy (kcal/mol)")
+p = ggplot(golist, aes(x = i, y = j, fill=energy)) + 
+  geom_tile() +
+  geom_abline(slope = -1, alpha = 0.5) +
+  scale_fill_continuous(name = "kcal/mol") +
+  scale_y_reverse(
+    expand = c(0, 0)
+  ) + scale_x_continuous(
+    expand = c(0, 0)
+  ) + coord_fixed()
 
-pdf(opt$output, 5, 5.5)
+pdf(opt$output, 6, 5)
 print(p)
 log = dev.off()
