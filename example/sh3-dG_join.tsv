@@ -1,2 +1,2 @@
-domain	free_N	free_C	dist_NC	Llinker	angle_NC	M	dGjoin
-sh3	0	0	7.02910375595	0	0.701517531187	2.06166283424	-6.112102
+domain	free_N	free_C	unfold_N	unfold_C	dist_NC	Llinker	angle_NC	M	dGjoin
+sh3	0	0	2	2	7.02910375595	0	0.701517531187	2.06166283424	-6.112102

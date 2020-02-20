@@ -219,16 +219,25 @@ non_zero_ind = np.nonzero(np.array(energy))
 energy_array = np.array(energy)[non_zero_ind]
 entropy_array = np.array(entropy)[non_zero_ind]
 
-# The minimum change of stabilities
-dG_J = entropy_array + energy_array
 
-dG_joinNC = max(dG_J)
+# The minimum change of stabilities
+dG_J_array = entropy_array + energy_array
+dG_J = np.array(entropy) + np.array(energy)
+
+dG_joinNC = max(dG_J_array)
+
+# Work out how many residues have to be unfolded at each termini to join them
+dG_joinNC_index = np.where(dG_J == dG_joinNC)[0][0]
+unfold_N = dG_joinNC_index / break_L
+unfold_C = dG_joinNC_index % break_L
 
 if zero:
-    dG_joinNC = max(max(dG_J),0)
+    dG_joinNC = max(max(dG_J_array),0)
+    unfold_N = 0
+    unfold_C = 0
 
 
-print "   The dG contribution of joining termini is {} kcal/mol".format(round(dG_joinNC,1))
+print "   The dG contribution of joining termini is {} kcal/mol, unfolding {} terminal residues".format(round(dG_joinNC,1), unfold_N+unfold_C)
 
 
 # Free energy change (dG_C) of cutting at certain positions of the structure
@@ -286,9 +295,9 @@ print "   Saving dGjoin and domain information to '{}-dG_join.tsv'".format(domai
 
 with open('{}-dG_join.tsv'.format(domain), 'w') as fout:
 
-    fout.write('domain\tfree_N\tfree_C\tdist_NC\tLlinker\tangle_NC\tM\tdGjoin\n')
-    fout.write('{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format(domain, free_N, free_C, dist_NC,
-                                                         linker, angle_NC, M, dG_joinNC))
+    fout.write('domain\tfree_N\tfree_C\tunfold_N\tunfold_C\tdist_NC\tLlinker\tangle_NC\tM\tdGjoin\n')
+    fout.write('{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format(domain, free_N, free_C, unfold_N, unfold_C, 
+                                                                 dist_NC, linker, angle_NC, M, dG_joinNC))
 
 
 print "   Saving dGcut profile to '{}-dG_cut.tsv'".format(domain)

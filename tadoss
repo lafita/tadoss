@@ -78,10 +78,8 @@ if [ "$file" == "" ]; then
 fi
 
 # Create the log and tmp directories if not yet there
-{
-  mkdir tmp
-  mkdir log
-} &> /dev/null
+mkdir -p tmp
+mkdir -p log
 
 # Clean files from previous run if any
 {
