@@ -96,7 +96,7 @@ mkdir -p log
 echo "Step 1 - trim the PDB file to protein only residues"
 {
   python2.7 ${path}/trim_nonprotein.py ${file} tmp/${domain}_protein.pdb -w
-} &> log/${domain}_1-trim.log
+} &> log/${domain}_1-process.log
 
 if [ ! -f tmp/${domain}_protein.pdb ]; then
   echo "Failed: see log/${domain}_1-process.log"

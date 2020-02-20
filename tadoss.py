@@ -312,11 +312,19 @@ with open('{}-dG_cut.tsv'.format(domain), 'w') as fout:
 
 print "   Saving PDB structure with dGcut in B-factors to '{}-dG_cut.pdb'".format(domain)
 
+# Set the B-factor on the CA atoms
 for p in range(0,len(res_list)):
     if p in dG_cuts.keys():
         res_list[p]['CA'].set_bfactor(dG_cuts[p])
     else:
         res_list[p]['CA'].set_bfactor(min(dG_cuts.values()))
+
+# Remove terminal residues identified as free
+for chain in structure[0]:
+    for id in range(1, free_N+1):
+        chain.detach_child((' ', id, ' '))
+    for id in range(L_p-free_C+1, L_p+1):
+        chain.detach_child((' ', id, ' '))
 
 io = bp.PDBIO()
 io.set_structure(structure)
