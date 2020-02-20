@@ -1,4 +1,7 @@
 
+# Example case and derived files
+example/*
+
 # python
 *.pyc
 
