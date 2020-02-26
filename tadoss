@@ -13,8 +13,8 @@ echo "
 TADOSS - TAndem DOmain Swap Stability predictor
 
 TADOSS estimates the stability of tandem domain swap conformations
-using an alchemical approximation based on coarse-grained (Go-like)
-simulation models from the 3D structure of a protein domain.
+with an alchemical approximation based on a coarse-grained (Go-like)
+models of the 3D structure of a protein domain.
 
 More information at: https://github.com/lafita/tadoss
 
@@ -121,7 +121,7 @@ if [ ! -f tmp/${domain}_hadded.pdb ]; then
   exit 1
 fi
 
-echo "Step 3 - build the GO model of the structure"
+echo "Step 3 - build the Go model of the structure"
 {
   python2.7 ${path}/go_builder/go_builder.py -k ${domain} --gmx tmp/${domain}_hadded.pdb
 } &> log/${domain}_3-go.log
@@ -141,6 +141,7 @@ if [ ! -f ${domain}-ddG_tot.tsv ]; then
   exit 1
 fi
 
+echo ""
 echo "SUCCESS!"
 echo ""
 
