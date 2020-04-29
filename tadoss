@@ -1,7 +1,6 @@
 # Bash script to bundle all the steps of the method
 
-# Print introduction and description header to the method
-
+# Header of the method with description
 echo "
   ______ ___     ____   ____  _____ _____
  /_  __//   |   / __ \ / __ \/ ___// ___/
@@ -13,8 +12,8 @@ echo "
 TADOSS - TAndem DOmain Swap Stability predictor
 
 TADOSS estimates the stability of tandem domain swap conformations
-with an alchemical approximation based on a coarse-grained (Go-like)
-models of the 3D structure of a protein domain.
+from an alchemical free energy approximation based on a coarse-grained
+(Go-like) model of the 3D structure of a protein domain.
 
 More information at: https://github.com/lafita/tadoss
 
