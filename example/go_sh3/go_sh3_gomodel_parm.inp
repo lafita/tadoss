@@ -1,6 +1,6 @@
 * This CHARMM .param file describes a Go model of sh3
 * Parameters scaled to obtain a Tf of:   350.000000
-* Scaling all native contacts by a factor of     1.344916
+* Scaling all native contacts by a factor of     1.362545
 
 read param card
 * Parameters for Go model of sh3
@@ -378,7 +378,7 @@ G46     0.0     -0.000132     4.730869
 G47     0.0     -0.000132     3.404719
 G48     0.0     -0.000132     3.263479
 G49     0.0     -0.000132     2.798630
-G50     0.0     -0.000132     4.565104
+G50     0.0     -0.000132     4.001311
 G51     0.0     -0.000132     3.511327
 G52     0.0     -0.000132     2.673241
 G53     0.0     -0.000132     4.534139
@@ -494,7 +494,6 @@ NBFIX
   G30   G37 0.000000e+00     6.553070
   G32   G35 0.000000e+00     5.609401
   G34   G49 0.000000e+00     5.179841
-  G34   G50 0.000000e+00     7.129920
   G35   G46 0.000000e+00     5.866747
   G35   G47 0.000000e+00     5.604113
   G35   G48 0.000000e+00     4.587961
