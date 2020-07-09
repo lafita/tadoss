@@ -12,8 +12,8 @@ echo "
 TADOSS - TAndem DOmain Swap Stability predictor
 
 TADOSS estimates the stability of tandem domain swap conformations
-from an alchemical free energy approximation based on a coarse-grained
-(Go-like) model of the 3D structure of a protein domain.
+from the 3D structure of a protein domain using an alchemical free
+energy approximation based on coarse-grained (Go-like) models.
 
 More information at: https://github.com/lafita/tadoss
 
@@ -23,25 +23,24 @@ More information at: https://github.com/lafita/tadoss
 path=`dirname $0`
 
 # Handle the inputs and help
-usage="$(basename "$0") -f [file.pdb] [-h] [-d domain] [-g gmx] [-r reduce]
+usage="$(basename "$0") -f [file.pdb] [-h] [-d domain] [-r reduce] [-m]
 
-where:
-    -h  show this help text
     -f  path to PDB file of a domain structure (required)
     -d  domain name (default: query)
-    -g  location of GROMACS binary (default: gmx)
-    -r  location of Reduce binary
+    -r  location of Reduce binary (default: reduce)
+    -m  model most stable domain swap (default: false)
+    -h  show this Help message
 
-Source code in: ${path}
+Code location: ${path}
 
 "
 
 domain="query"
 file=""
-gromacs="gmx"
-reduce=""
+reduce="reduce"
+model="false"
 
-while getopts ':hf:d:g:r:' option
+while getopts ':mhf:d:r:' option
 do
   case "$option" in
     h) echo "$usage"
@@ -51,11 +50,9 @@ do
        ;;
     f) file=$OPTARG
        ;;
-    g) gromacs=$OPTARG
-       reduce=""
+    m) model="true"
        ;;
     r) reduce=$OPTARG
-       gromacs=""
        ;;
     :) printf "Missing argument for -%s\n" "$OPTARG" >&2
        echo "$usage" >&2
@@ -69,7 +66,7 @@ do
 done
 shift $((OPTIND - 1))
 
-# Test to see if they gave the required options
+# Test to see if we have the required input file
 if [ "$file" == "" ]; then
   echo "Missing required -f [file.pdb] option"
   echo "$usage"
@@ -80,7 +77,7 @@ fi
 mkdir -p tmp
 mkdir -p log
 
-# Clean files from previous run if any
+# Clean files from previous runs if any
 {
   rm tmp/${domain}_*
   rm log/${domain}_*
@@ -89,56 +86,65 @@ mkdir -p log
   rm ${domain}-dG_cut.tsv
   rm ${domain}-dG_join.tsv
   rm ${domain}-ddG_tot.tsv
-} &> /dev/null
+} &> log/${domain}_0-cleaning.log
 
 
-echo "Step 1 - trim the PDB file to protein only residues"
+echo "Step 1 - Trim PDB file to protein only residues"
 {
   python2.7 ${path}/trim_nonprotein.py ${file} tmp/${domain}_protein.pdb -w
 } &> log/${domain}_1-process.log
 
 if [ ! -f tmp/${domain}_protein.pdb ]; then
-  echo "Failed: see log/${domain}_1-process.log"
+  echo "Error: see log/${domain}_1-process.log"
   exit 1
 fi
 
-echo "Step 2 - add hydrogens to structure"
+echo "Step 2 - Add hydrogens to structure with reduce"
 {
-  if [ "$reduce" == "" ]; then
-    echo "Using GROMACS in $gromacs"
-    $gromacs pdb2gmx -f tmp/${domain}_protein.pdb -o tmp/${domain}_hadded.pdb -p tmp/${domain}_remove.top -i tmp/${domain}_remove.itp -ignh -missing <<< $'14\n3'
-    rm tmp/${domain}_remove.*
-  else
-    echo "Using Reduce in $reduce"
-    $reduce tmp/${domain}_protein.pdb > tmp/${domain}_hadded.pdb
-  fi
-
+  echo "Using Reduce program in $reduce"
+  $reduce tmp/${domain}_protein.pdb > tmp/${domain}_hadded.pdb
 } &> log/${domain}_2-hadd.log
 
 if [ ! -f tmp/${domain}_hadded.pdb ]; then
-  echo "Failed: see log/${domain}_2-hadd.log"
+  echo "Error: see log/${domain}_2-hadd.log"
   exit 1
 fi
 
-echo "Step 3 - build the Go model of the structure"
+echo "Step 3 - Calculate Go model energies"
 {
   python2.7 ${path}/go_builder/go_builder.py -k ${domain} --gmx tmp/${domain}_hadded.pdb
 } &> log/${domain}_3-go.log
 
 if [ ! -f go_${domain}/go_${domain}_gomodel_golist.dat ]; then
-  echo "Failed: see log/${domain}_3-go.log"
+  echo "Error: see log/${domain}_3-go.log"
   exit 1
 fi
 
-echo "Step 4 - calculate the alchemical ddG of the domain"
+echo "Step 4 - Estimate alchemical ddG of domain swaps"
 {
   python2.7 ${path}/tadoss.py ${domain} tmp/${domain}_hadded.pdb -w
 } &> log/${domain}_4-ddG.log
 
 if [ ! -f ${domain}-ddG_tot.tsv ]; then
-  echo "Failed: see log/${domain}_4-ddG.log"
+  echo "Error: see log/${domain}_4-ddG.log"
   exit 1
 fi
+
+
+if [ "$model" == "true" ]; then
+  
+  echo "Step 5 - Model tandem domain swap structure - be patient, might take long"
+  {
+    Rscript ${path}/modelling/tadoss_model.R -p ${path} -d ${domain}
+  } &> log/${domain}_5-model.log
+
+  if [ ! -f ${domain}_tswap*.pdb ]; then
+    echo "Error: see log/${domain}_5-model.log"
+    exit 1
+  fi
+
+fi
+
 
 echo ""
 echo "SUCCESS!"
