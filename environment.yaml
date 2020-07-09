@@ -3,11 +3,14 @@ channels:
   - conda-forge
   - bioconda
   - mx
-  #- r
+  - r
 dependencies:
   - python =2.7
   - biopython =1.73
-  - gromacs =2018.3
   - reduce =3.24
-  #- R =3.4.*
-  #- r-ggplot2 =3.0.0
+  - R =3.6
+  - r-ggplot2 =3.0.0
+  - r-dplyr
+  - r-bio3d=v2
+  - r-argparse
+  - r-optparse
