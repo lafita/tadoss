@@ -4,25 +4,20 @@
 
 `TADOSS` estimates the stability of tandem domain swap conformations using an alchemical approximation based on coarse-grained (Go-like) simulation models from the three-dimensional structure of a protein domain.
 
-The stability is defined as the relative free energy difference (`ΔΔG`) between the native and swap conformations of a pair of tandem identical domains. More information about the energetic model can be found [here](docs/energetic_model.pdf).
+The stability is defined as the relative free energy difference (`ΔΔG`) between the native and swap conformations of a pair of tandem identical domains. 
+More information about the energetic model can be found [here](docs/energetic_model.pdf) and all the details in the following publication:
+
+>Aleix Lafita, Pengfei Tian, Robert B Best, Alex Bateman. TADOSS: computational estimation of tandem domain swap stability, Bioinformatics (2018) https://doi.org/10.1093/bioinformatics/bty974
+
 
 ## Requirements
 
 - `Python` 2.7: https://www.python.org/download/releases/2.7
 - `BioPython`: http://biopython.org/wiki/Download
-- One of the following two:
-  - `GROMACS` 5.0 or higher: http://manual.gromacs.org/documentation
-  - `Reduce`: http://kinemage.biochem.duke.edu/software/reduce.php
+- `Reduce`: http://kinemage.biochem.duke.edu/software/reduce.php
+- `R` version 3.6 https://www.r-project.org, including packages: `dplyr`, `argparse`, `optparse`, `edmcr`, `bio3d`, `ggplot2`
 
-Other recommended software:
-- `R` version 3.4 or higher https://www.r-project.org, including:
-  - `ggplot2`
-  - `optparse`
-- Molecular 3D viewers:
-  - `PyMOL`: https://pymol.org/2
-  - `Chimera`: https://www.cgl.ucsf.edu/chimera/download.html
-
-A [conda](https://conda.io) environment description is provided in [environment.yaml](environment.yaml). To install the requirements simply run:
+A [Conda](https://conda.io) [environment.yaml](environment.yaml) is provided to facilitate installation. 
 ```bash
 conda env create --name tadoss --file environment.yaml
 conda activate tadoss
@@ -30,29 +25,27 @@ conda activate tadoss
 
 ## Installation
 
-1. Make sure you have installed the required software and packages (see above).
-2. Clone this repository to your desired location.
+Simply clone this repository to your desired location 
 ```bash
 git clone git@github.com:lafita/tadoss.git ~/tadoss
 ```
-3. Optional: add `~/tadoss` to your `PATH` (symlinks do not currently work).
+Optionally add `~/tadoss` to your `PATH` (symlinks do not currently work).
 
 ## Usage
 
-The method consist in four steps starting from a `PDB` file of a protein domain structure. 
-We demonstrate the usage with the SH3 domain in `e1shgA1.pdb` as an example.
+The input to the method is a `PDB` file of a protein domain structure. 
+We demonstrate the usage with an SH3 domain (`ECOD:e1shgA1`).
 
 ### Bundle script
 
-In order to simplify the usage of the method, a `Bash` script that bundles the four steps steps is provided with a simple interface to the user.
-
+A `BASH` script that bundles all the steps in the calculation is provided with a simple command line interface
 ```
-~/tadoss/tadoss -d sh3 -f e1shgA1.pdb
+~/tadoss/tadoss -d sh3 -f e1shgA1.pdb -m
 ```
 
 ### Step by step calculation
 
-Each of the steps can also be run separately to allow more flexibility and control to the users.
+Each of the steps can also be run separately to allow more flexibility and control to advanced users.
 
 1. Download and prepare the domain structure (ECOD domain `e1shgA1` as example):
 ```
@@ -66,10 +59,6 @@ python2.7 ~/tadoss/trim_nonprotein.py e1shgA1.pdb tmp/sh3_protein.pdb
 ```
 
 2. Add missing hydrogens to the structure:
-```
-# Using GROMACS
-gmx pdb2gmx -f tmp/sh3_protein.pdb -o tmp/sh3_hadded.pdb -ignh <<< $'14\n3'
-```
 ```
 # Using Reduce (use the path to the "reduce" script)
 reduce tmp/sh3_protein.pdb > tmp/sh3_hadded.pdb
@@ -89,8 +78,13 @@ The first two columns of the file contain the pair of residues forming the conta
 ```
 python2 ~/tadoss/tadoss.py sh3 tmp/sh3_hadded.pdb
 ```
-Use the `-h` (help) option to see all the available options, including linker and hinge lengths:
+Use the `-h` (help) option to see all the available options, including linker and hinge lengths.
 
+5. Modelling tandem domain swap conformations:
+```
+Rscript ~/tadoss/modelling/model_tswap.R -s tmp/sh3_hadded.pdb -b ~/tadoss/modelling/calpha_bounds.tsv -o sh3_tswap33.pdb -i 33 -g 1 -f 1
+```
+Use the `-h` (help) option to see all the available parameters, including linker and hinge lengths.
 
 ## Output
 
@@ -123,6 +117,10 @@ To take a look at it in `PyMOL`, open the structure and select `Action` > `prese
 
 <img src="example/sh3-dG_cut_structure.png" width="400">
 
+Finally, open the model of the most stable tandem domain swap conformation to inspect the hinge loop and the domain orientations:
+
+<img src="example/sh3_tswap33.png" width="400">
+
 
 ## Census
 
@@ -131,7 +129,7 @@ Alchemical free energy estimations by `TADOSS` for 129 manual representative dom
 
 ## Citation
 
-If you find this method useful, please consider citing the following publication, where you can also find more information:
+If you find this method useful, please consider citing the following publication:
 
 >Aleix Lafita, Pengfei Tian, Robert B Best, Alex Bateman. TADOSS: computational estimation of tandem domain swap stability, Bioinformatics (2018) https://doi.org/10.1093/bioinformatics/bty974
 
